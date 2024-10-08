@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import axios from 'axios'
-import { json, Jsonify } from "@remix-run/node"; // or cloudflare/deno
-import { useAtom } from 'jotai'
+import { json } from "@remix-run/node"; // or cloudflare/deno
+import { useAtom, atom } from 'jotai'
 import { promptGPT2 } from '../server-utils'
 import { messagesAtom } from '../components/Conversation'
 import { v4 as uuid } from 'uuid'
+import { searchAtom, searchResultsAtom, featureEditsAtom } from '../components/Inspector'
 
 import Chat from '../components/Chat'
 
@@ -21,15 +22,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   console.log('FOUND SEARCH: ', search)
   const options = {
     method: 'POST',
-    url: 'https://www.neuronpedia.org/api/search-all',
+    url: 'https://www.neuronpedia.org/api/explanation/search',
     headers: {'Content-Type': 'application/json', 'X-Api-Key': 'YOUR_TOKEN'},
     data: {
       modelId: 'gpt2-small',
-      sourceSet: 'res-jb',
-      text: search,
-      selectedLayers: ['6-res-jb'],
-      sortIndexes: [1],
-      ignoreBos: false
+      layers: ['6-res-jb'],
+      query: search,
     }
   };
 
@@ -38,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let searchResults = null
 
   if (message) {
-    promptResponse = await promptGPT2(message)
+    promptResponse = await promptGPT2(message, 6, 15003)
   }
 
   try {
@@ -60,15 +58,23 @@ export default function Index() {
   const [features, setFeatures] = useState([])
   const [searchParams, setSearchParams] = useSearchParams();
   const [messages, setMessages] = useAtom(messagesAtom)
+  const [search] = useAtom(searchAtom)
+  const [searchResults, setSearchResults] = useAtom(searchResultsAtom)
+  const [featureEdits, setFeatureEdits] = useAtom(featureEditsAtom)
 
   useEffect(() => {
+    let params = {}
     if (messages.length) {
       const message = messages[messages.length - 1]
       if (message.type === 'user') {
-        setSearchParams({ message: message.content })
+        params = { message: message.content }
       }
     }
-  }, [messages.length])
+    if (search) {
+      params = { ...params, search }
+    }
+    setSearchParams(params)
+  }, [messages.length, search])
 
   const data = useLoaderData<typeof loader>();
 
@@ -82,7 +88,26 @@ export default function Index() {
       }])
       setSearchParams({})
     }
+    if ((data as any).searchResults) {
+      const value = (data as any).searchResults.results
+      console.log('SEARCH RESULTS:', value)
+      const results = value.reduce((prevVal: any, feature: any) => ({
+        ...prevVal,
+        [feature.index]: feature
+      }), {})
+      console.log('SETTING SEARCH RESULTS:', results)
+      setSearchResults(results)
+    }
   }, [data])
+
+  useEffect(() => {
+    const featureEdits = Object.values(searchResults).reduce((prevVal, result) => ({
+      ...prevVal,
+      [result.index]: { index: result.index, value: 0 }
+    }), {})
+    console.log('FEATURE EDITS:', featureEdits)
+    /* setFeatureEdits(featureEdits) */
+  }, [searchResults])
 
   return (
     <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
@@ -92,4 +117,3 @@ export default function Index() {
     </main>
   );
 }
-

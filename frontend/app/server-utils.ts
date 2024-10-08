@@ -4,13 +4,13 @@ import util from 'util';
 
 const execAsync = util.promisify(exec);
 
-export async function promptGPT2(prompt: string) {
+export async function promptGPT2(prompt: string, layer = 6, feature = 0) {
   const scriptRelativePath = '../hooked_prompt.py';
   // const scriptAbsolutePath = path.join(__dirname, scriptRelativePath);
 
   try {
     // Adjust the path to the virtual environment activate script
-    const command = `bash -c "source ../venv/bin/activate && python ${scriptRelativePath} --feature=0 '${prompt}'"`;
+    const command = `bash -c "source ../venv/bin/activate && python ${scriptRelativePath} --layer=${layer} --feature=${feature} '${prompt}'"`;
 
     const { stdout, stderr } = await execAsync(command);
 

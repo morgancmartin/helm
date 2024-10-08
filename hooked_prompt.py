@@ -4,16 +4,12 @@ from sae_lens import SAE
 from transformer_lens import HookedTransformer
 # from transformers import AutoTokenizer, AutoModelForCausalLM
 
-def generate(prompt="There once was a little boy named Johnny.", feature=0):
+def generate(prompt="There once was a little boy named Johnny.", feature=0, layer=6):
     # device setup
     if t.backends.mps.is_available():
         device = "mps"
     else:
         device = "cuda" if t.cuda.is_available() else "cpu"
-
-    # print(f"Device: {device}")
-
-    layer = 6
 
 
     # hf_model = AutoModelForCausalLM.from_pretrained("google/gemma-2b", device_map="auto")
@@ -157,6 +153,7 @@ def main():
     parser = argparse.ArgumentParser(description="Process a prompt and a feature index.")
     parser.add_argument('prompt', type=str, help="The prompt string to be processed.")
     parser.add_argument('--feature', type=int, default=None, help="Optional feature index.")
+    parser.add_argument('--layer', type=int, default=None, help="Optional layer index.")
 
     args = parser.parse_args()
 
