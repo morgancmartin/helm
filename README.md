@@ -19,6 +19,7 @@ Helm is designed to allow users to incorporate multiple feature applications sim
 To get started with Helm, follow the steps below:
 
 ```sh
+git clone git@github.com:morgancmartin/helm.git
 cd helm/
 source venv/bin/activate
 pip install -r requirements.txt
