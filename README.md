@@ -29,7 +29,7 @@ git clone git@github.com:morgancmartin/helm.git
 cd helm/
 source venv/bin/activate
 pip install -r requirements.txt
-cd helm/frontend/
+cd ./frontend/
 npm run dev
 ```
 
