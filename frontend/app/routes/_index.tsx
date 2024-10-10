@@ -22,7 +22,7 @@ import Chat from '../components/Chat'
 
 import { useOptionalUser } from "~/utils";
 
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
+export const meta: MetaFunction = () => [{ title: "Helm" }];
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
