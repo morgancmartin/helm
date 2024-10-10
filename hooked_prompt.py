@@ -140,9 +140,6 @@ def main():
 
     args = parser.parse_args()
 
-    if args.features is not None:
-        print(f"GENERATING WITH FEATURES: {args.features}")
-
     generate(args.prompt, args.features) if args.features else generate(args.prompt)
 
 if __name__ == '__main__':
