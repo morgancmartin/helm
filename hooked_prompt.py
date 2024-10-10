@@ -49,9 +49,6 @@ def generate(prompt, features=[]):
                 position = sae_out.shape[1]
                 steering_vector = coefficient * sae.W_dec[feature_index]
                 resid_pre[:, :position - 1, :] += steering_vector
-                # pos_two = six_sae_out.shape[1]
-                # sv_two = coefficient * six_sae.W_dec[17830]
-                # resid_pre[:, :pos_two - 1, :] += sv_two
 
         return steering_hook
 
@@ -140,12 +137,9 @@ def main():
     parser = argparse.ArgumentParser(description="Process a prompt and a feature index.")
     parser.add_argument('prompt', type=str, help="The prompt string to be processed.")
     parser.add_argument('--features', type=parse_vector_of_vectors, default=None, help="Optional feature vectors")
-    # parser.add_argument('--feature', type=int, default=None, help="Optional feature index.")
-    # parser.add_argument('--layer', type=int, default=None, help="Optional layer index.")
 
     args = parser.parse_args()
 
-    # print(f"Prompt: {args.prompt}")
     if args.features is not None:
         print(f"GENERATING WITH FEATURES: {args.features}")
 
