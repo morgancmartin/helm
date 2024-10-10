@@ -41,7 +41,7 @@ Helm incorporates several advanced technologies and frameworks to achieve its fu
 - **Frontend**: Built using [Remix](https://remix.run/) for a seamless user interface experience.
 - **Transformer Hooking**: Employs the HookedTransformer from the remarkable [TransformerLens](https://github.com/TransformerLensOrg/TransformerLens) library.
 - **Spare Autoencoders**: Utilizes Joseph Bloom's Open Source Spare Autoencoders across all Residual Stream Layers of GPT2-small. More details are available on [Neuronpedia](https://www.neuronpedia.org/gpt2sm-res-jb).
-- **Feature Search and Explanation**: Utilizies Neuronpedia's feature search and explanation API.
+- **Feature Search and Explanation**: Utilizies Neuronpedia's feature [search and explanation API](https://www.neuronpedia.org/api-doc#tag/explanations/POST/api/explanation/search-release).
 
 Helm’s capability of simultaneous feature application ensures precision steering, making it exceptionally useful for applications requiring meticulous control over language model outputs.
 
