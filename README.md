@@ -6,7 +6,7 @@
 
 </div>
 
-Helm is an open-source LLM (Large Language Model) feature-based steering application inspired by [Goodfire](https://goodfire.ai/). The project leverages SAE (Spare Autoencoder) feature clamping to steer and modulate the outputs of LLM responses, offering a unique and powerful way to control and direct AI-generated content.
+Helm is an open-source LLM (Large Language Model) feature-based steering application inspired by [Goodfire](https://goodfire.ai/). The project leverages SAE (Sparse Autoencoder) feature clamping to steer and modulate the outputs of LLM responses, offering a unique and powerful way to control and direct AI-generated content.
 
 ## Table of Contents
 
