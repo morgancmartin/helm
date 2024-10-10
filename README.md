@@ -1,6 +1,6 @@
 # Helm
 
-![Helm Logo](helm-img.webp)
+<img src="helm-img.webp" alt="Helm Logo" width="33%">
 
 Helm is an open-source LLM (Large Language Model) feature-based steering application inspired by [Goodfire](https://goodfire.ai/). The project leverages SAE (Spare Autoencoder) feature clamping to steer and modulate the outputs of LLM responses, offering a unique and powerful way to control and direct AI-generated content.
 
