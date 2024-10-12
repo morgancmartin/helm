@@ -133,7 +133,8 @@ export default function Index() {
   useSearchParamSetter(() => {
     console.log('RUNNING MESSAGE SETTER WITH EDIT VALUES:', featureEditValues)
     const lastMessage = messages[messages.length - 1]
-    if (featureEditValues.length && lastUserMessage && lastMessage.type === 'user') {
+    const validMode = isEditing || lastMessage?.type === 'user'
+    if (featureEditValues.length && lastUserMessage && validMode) {
       setTestPreviewMessage('loading')
       console.log('SEARCH RESULTS FOR EDIT GEN:', searchResults, stagedEdits)
       console.log('FEATURE EDIT VALUES:', featureEditValues)
