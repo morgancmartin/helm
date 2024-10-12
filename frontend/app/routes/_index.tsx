@@ -14,6 +14,7 @@ import {
   featureEditValuesAtom,
   testPreviewMessageAtom,
   stagedEditsAtom,
+  activeEditsAtom,
   editingAtom,
   lastUserMessageAtom
 } from '../client-state'
@@ -95,11 +96,12 @@ export default function Index() {
   const [testPreviewMessage, setTestPreviewMessage] = useAtom(testPreviewMessageAtom)
   const [isEditing] = useAtom(editingAtom)
   const [stagedEdits] = useAtom(stagedEditsAtom)
+  const [activeEdits] = useAtom(activeEditsAtom)
   const [updatedResults, setUpdatedResults] = useState(false)
   const [lastUserMessage] = useAtom(lastUserMessageAtom)
 
   useSearchParamSetter(() => {
-    console.log('GOT LAST USER MESSAGE:', lastUserMessage)
+    console.log('GOT LAST USER MESSAGE:', lastUserMessage, 'AND FEATUREEDITVALUES:', featureEditValues)
     const lastMessage = messages[messages.length - 1]
     if (lastUserMessage && !featureEditValues.length && lastMessage.type === 'user') {
       console.log('RETURNING MESSAGE PARAM:', { message: lastUserMessage.content })
@@ -130,13 +132,21 @@ export default function Index() {
 
   useSearchParamSetter(() => {
     console.log('RUNNING MESSAGE SETTER WITH EDIT VALUES:', featureEditValues)
-    if (featureEditValues.length && lastUserMessage) {
+    const lastMessage = messages[messages.length - 1]
+    if (featureEditValues.length && lastUserMessage && lastMessage.type === 'user') {
       setTestPreviewMessage('loading')
       console.log('SEARCH RESULTS FOR EDIT GEN:', searchResults, stagedEdits)
       console.log('FEATURE EDIT VALUES:', featureEditValues)
-      const features = stagedEdits.map(
+      const stagedFeatures = stagedEdits.map(
         (edit) => [searchResults[edit.index].layer, edit.index, (300 / 10) * edit.value].join(',')
       ).join(';')
+
+      const activeFeatures = activeEdits.map(
+        (edit) => [searchResults[edit.index].layer, edit.index, (300 / 10) * edit.value].join(',')
+      ).join(';')
+
+      const features = stagedFeatures && activeFeatures ? `${stagedFeatures};${activeFeatures}` : stagedFeatures ? stagedFeatures : activeFeatures
+
       return { message: lastUserMessage.content, features  }
     }
     return null
@@ -156,11 +166,19 @@ export default function Index() {
       setSearchParams({})
     }
     if ((data as any).editPromptResponse) {
-      setTestPreviewMessage({
-        id: uuid(),
-        type: 'model',
-        content: (data as any).editPromptResponse
-      })
+      if (stagedEdits.length){
+        setTestPreviewMessage({
+          id: uuid(),
+          type: 'model',
+          content: (data as any).editPromptResponse
+        })
+      } else if (activeEdits.length) {
+        setMessages([...messages, {
+          id: uuid(),
+          type: 'model',
+          content: (data as any).editPromptResponse
+        }])
+      }
       setSearchParams({})
     }
     if ((data as any).searchResults) {
