@@ -18,4 +18,7 @@ export const stagedEditsAtom = atom(
   (get) => Object.values(get(featureEditsAtom)).filter((edit) => edit.value !== 0 && !edit.active)
 )
 export const activeEditsAtom = atom((get) => Object.values(get(featureEditsAtom)).filter((edit) => edit.active))
+export const lastUserMessageAtom = atom<Message | undefined>(
+  (get) => Object.values(get(messagesAtom)).reverse().filter((msg) => msg.type === 'user')[0]
+)
 export const editingAtom = atom((get) => !!get(stagedEditsAtom).length)

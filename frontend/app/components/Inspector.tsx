@@ -4,7 +4,14 @@ import { MagnifyingGlassIcon, ArrowUturnLeftIcon, XMarkIcon, XCircleIcon } from 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import debounce from 'lodash/debounce'
 import { capitalize } from 'lodash'
-import { searchAtom, featureEditsAtom, searchResultsAtom, stagedEditsAtom, activeEditsAtom } from '../client-state'
+import {
+  searchAtom,
+  featureEditsAtom,
+  searchResultsAtom,
+  stagedEditsAtom,
+  activeEditsAtom,
+  lastUserMessageAtom
+} from '../client-state'
 
 type Tab = 'inspect' | 'search' | 'edits'
 export const selectedTabAtom = atom<Tab>('search')
@@ -38,10 +45,11 @@ function View() {
 
 function useFeatureEditUpdater() {
   const [featureEdits, setFeatureEdits] = useAtom(featureEditsAtom)
+  const [lastUserMessage] = useAtom(lastUserMessageAtom)
   const getFeatureEditUpdater = (index: string) => (e: any) => {
     const edits = {
       ...featureEdits,
-      [index]: { ...featureEdits[index], value: Number(e.target.value) }
+      [index]: { ...featureEdits[index], value: Number(e.target.value), active: !lastUserMessage ? true : false }
     }
     console.log('SETTING FEATURE EDITS:', edits)
     setFeatureEdits(edits)

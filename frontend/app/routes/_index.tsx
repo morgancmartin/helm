@@ -14,7 +14,8 @@ import {
   featureEditValuesAtom,
   testPreviewMessageAtom,
   stagedEditsAtom,
-  editingAtom
+  editingAtom,
+  lastUserMessageAtom
 } from '../client-state'
 import { pick } from 'lodash'
 
@@ -95,19 +96,18 @@ export default function Index() {
   const [isEditing] = useAtom(editingAtom)
   const [stagedEdits] = useAtom(stagedEditsAtom)
   const [updatedResults, setUpdatedResults] = useState(false)
+  const [lastUserMessage] = useAtom(lastUserMessageAtom)
 
   useSearchParamSetter(() => {
-    console.log('MESSAGES UPDATED TO:', messages)
-    if (messages.length) {
-      const message = messages[messages.length - 1]
-      console.log('GOT MESSAGE:', message)
-      if (message.type === 'user') {
-        console.log('RETURNING MESSAGE PARAM:', { message: message.content })
-        return { message: message.content }
-      }
+    console.log('GOT LAST USER MESSAGE:', lastUserMessage)
+    const lastMessage = messages[messages.length - 1]
+    if (lastUserMessage && !featureEditValues.length && lastMessage.type === 'user') {
+      console.log('RETURNING MESSAGE PARAM:', { message: lastUserMessage.content })
+      console.log('FEATURE EDIT VALUES:', featureEditValues)
+      return { message: lastUserMessage.content }
     }
-    return {}
-  }, [messages.length])
+    return null
+  }, [lastUserMessage, messages.length])
 
   const cacheSearchResults = () => {
     console.log('RESULTS BEFORE CACHE:', searchResults)
@@ -125,26 +125,29 @@ export default function Index() {
     if (search) {
       return { search }
     }
-    return {}
+    return null
   }, [search])
 
   useSearchParamSetter(() => {
     console.log('RUNNING MESSAGE SETTER WITH EDIT VALUES:', featureEditValues)
-    const message = messages.filter((message) => message.type === 'user').slice(-1)[0]
-    if (featureEditValues.length) {
+    if (featureEditValues.length && lastUserMessage) {
       setTestPreviewMessage('loading')
       console.log('SEARCH RESULTS FOR EDIT GEN:', searchResults, stagedEdits)
-      const features = stagedEdits.map((edit) => [searchResults[edit.index].layer, edit.index, (300 / 10) * edit.value].join(',')).join(';')
-      return { message: message.content, features  }
+      console.log('FEATURE EDIT VALUES:', featureEditValues)
+      const features = stagedEdits.map(
+        (edit) => [searchResults[edit.index].layer, edit.index, (300 / 10) * edit.value].join(',')
+      ).join(';')
+      return { message: lastUserMessage.content, features  }
     }
-    return {}
-  }, [featureEditValues])
+    return null
+  }, [featureEditValues, messages.length])
 
   const data = useLoaderData<typeof loader>();
 
   useEffect(() => {
     console.log(data)
     if ((data as any).promptResponse) {
+      console.log('ADDING PROMPT RESPONSE:', (data as any).promptResponse)
       setMessages([...messages, {
         id: uuid(),
         type: 'model',
@@ -214,10 +217,13 @@ export default function Index() {
   );
 }
 
-function useSearchParamSetter(getParams: () => object, triggers: any[]) {
+function useSearchParamSetter(getParams: () => object | null, triggers: any[]) {
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     const params = getParams()
-    setSearchParams({...searchParams, ...params })
+    if (params) {
+      console.log('SETTING SEARCH PARAMS:', {...searchParams, ...params })
+      setSearchParams({...searchParams, ...params })
+    }
   }, triggers)
 }
