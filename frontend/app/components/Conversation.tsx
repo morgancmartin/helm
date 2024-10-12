@@ -72,8 +72,8 @@ function BaseChat({
         ))}
       </div>
       <TextareaAutosize
-        className="w-full resize-none overflow-hidden"
-        placeholder="Start the conversation"
+        className="w-full h-18 p-4 rounded-lg text-white resize-none overflow-hidden bg-white/10"
+        placeholder={`${messages.length ? 'Continue' : 'Start'} the conversation`}
         onKeyDown={onKeyDown}
         onChange={updateMessage}
         value={message}

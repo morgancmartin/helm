@@ -164,8 +164,8 @@ function Feature({ index, cardType }:{ index: string; cardType: 'search' | 'edit
         <div className="flex justify-between w-full">
           <span className="text-xs w-[10%]">-10</span>
           <input
-            className="!w-[70%]"
             type="range"
+            className="!w-[70%] h-2 bg-gray-200 rounded-lg overflow-hidden appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             min="-10"
             max="10"
             value={featureEdits[feature?.index]?.value}

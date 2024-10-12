@@ -6,7 +6,7 @@ import { FeatureVector } from './client-state'
 const execAsync = util.promisify(exec);
 
 export async function promptGPT2(prompt: string, features?: string) {
-  console.log(`GENERATING WITH PROMPT: ${prompt} \n\n\n AND FEATUREs: ${features}`)
+  console.log(`GENERATING WITH PROMPT: ${prompt} \n\n\nAND FEATURES: ${features}`)
   const scriptRelativePath = '../hooked_prompt.py';
   // const scriptAbsolutePath = path.join(__dirname, scriptRelativePath);
   // const featureString = (features ?? []).reduce(
