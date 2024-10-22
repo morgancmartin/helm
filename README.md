@@ -48,7 +48,7 @@ Helm’s capability of simultaneous feature application ensures precision steeri
 
 ## Demo
 
-For a live demonstration of Helm in action, please check out our video demo [here](./2024-10-22%2016-32-15.mkv).
+For a live demonstration of Helm in action, please check out our video demo [here](https://youtu.be/lY_YPxZoORk).
 
 ## Links
 
