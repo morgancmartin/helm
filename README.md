@@ -13,6 +13,7 @@ Helm is an open-source LLM (Large Language Model) feature-based steering applica
 - [Introduction](#introduction)
 - [Usage](#usage)
 - [Implementation Details](#implementation-details)
+- [Demo](#demo)
 - [Links](#links)
 - [Future Improvements](#future-improvements)
 
@@ -44,6 +45,10 @@ Helm incorporates several advanced technologies and frameworks to achieve its fu
 - **Feature Search and Explanation**: Utilizies Neuronpedia's feature [search and explanation API](https://www.neuronpedia.org/api-doc#tag/explanations/POST/api/explanation/search-release).
 
 Helm’s capability of simultaneous feature application ensures precision steering, making it exceptionally useful for applications requiring meticulous control over language model outputs.
+
+## Demo
+
+For a live demonstration of Helm in action, please check out our video demo [here](./2024-10-22%2016-32-15.mkv).
 
 ## Links
 
