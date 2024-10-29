@@ -83,7 +83,7 @@ function BaseChat({
 }
 
 function EditStaging() {
-  const [messages] = useAtom(messagesAtom)
+  const [messages, setMessages] = useAtom(messagesAtom)
   const [testPreviewMessage] = useAtom(testPreviewMessageAtom)
   const [stagedEdits] = useAtom(stagedEditsAtom)
   const [featureEdits, setFeatureEdits] = useAtom(featureEditsAtom)
@@ -104,6 +104,13 @@ function EditStaging() {
       [featureEdit.index]: featureEdit.value ? { ...featureEdit, active: true } : featureEdit
     }), {})
     setFeatureEdits(newEdits)
+    setMessages([
+      ...messages.slice(0 , -1),
+      {
+        ...lastMessage,
+        content: (testPreviewMessage as Message).content ?? ''
+      }
+    ])
   }
 
   return (
